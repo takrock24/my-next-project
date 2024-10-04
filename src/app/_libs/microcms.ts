@@ -12,19 +12,17 @@ export type Member = {
     image: MicroCMSImage;
 } & MicroCMSListContent;
 
-export type News = {
-    id: string;
-    title: string;
-    category: {
-        name: string;
-    };
-    publishedAt: string;
-    createdAt: string;
-};
-
 export type Category = {
     name: string;
-}
+} & MicroCMSListContent;
+
+export type News = {
+    title: string;
+    description: string;
+    content: string;
+    thumbnail?: MicroCMSImage;
+    category: Category;
+} & MicroCMSListContent;
 
 if (!process.env.MICROCMS_SERVICE_DOMAIN) {
     throw new Error("MICRO_SERVICE_DOMAIN is required");
@@ -43,6 +41,15 @@ export const getMembersList = async (queries?: MicroCMSQueries) => {
     const listData = await client
     .getList<Member>({
         endpoint: "members",
+        queries,
+    });
+    return listData;
+};
+
+export const getNewsList = async (queries?: MicroCMSQueries) => {
+    const listData = await client
+    .getList<News>({
+        endpoint: "news",
         queries,
     });
     return listData;
